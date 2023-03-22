@@ -1,10 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Superhero Database</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/createSuperhero.css}" rel="stylesheet">
 </head>
 <body>
 
+<h1>Update Superhero</h1>
+
+<form action="/kea/superhero/update" method="post" th:object="${updatedSuperhero}">
+
+    <input type="hidden" name="heroId" th:value="*{getsuperheroId()}">
+
+    <label>Superhero Name: </label>
+    <input type="text" name="heroName" th:value="${updatedSuperhero.superHeroName}"><br/>
+
+    <label>Real Name: </label>
+    <input type="text" name="realName" th:value="${updatedSuperhero.reelName}">
+
+    <input type="hidden" name="creationDate" th:value="${updatedSuperhero.creationYear}">
+
+    <label>City:</label>
+    <select name="city">
+        <option th:value="${updatedSuperhero.city}"></option>
+        <option th:each="city : ${cities}" th:value="${city}" th:text="${city}"></option>
+    </select>
+
+
+    <button type="submit">Opdater produkt</button>
+</form>
+
+</div>
 </body>
 </html>

@@ -21,6 +21,7 @@ label {
 }
 
 /* Style for the form inputs */
+
 input[type="text"],
 select {
     width: 100%;

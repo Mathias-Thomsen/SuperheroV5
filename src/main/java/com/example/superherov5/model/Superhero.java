@@ -10,19 +10,29 @@ public class Superhero {
     private int superheroId;
     private String superHeroName;
     private String reelName;
+    private String city;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private java.sql.Date creationYear;
 
 
 
     //konstruktør
-    public Superhero(int superheroId, String superHeroName, String reelName, java.sql.Date creationYear){
+    public Superhero(int superheroId, String superHeroName, String reelName, String city, java.sql.Date creationYear){
         this.superheroId = superheroId;
         this.superHeroName = superHeroName;
         this.reelName = reelName;
+        this.city = city;
         this.creationYear = creationYear;
     }
     public Superhero(){}
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     //Gettere
     public String getSuperHeroName() {

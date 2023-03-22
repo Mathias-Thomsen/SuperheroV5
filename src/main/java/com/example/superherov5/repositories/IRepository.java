@@ -11,6 +11,8 @@ import java.util.List;
 public interface IRepository {
     List<Superhero> getSuperheroes();
     Superhero getSuperhero(String superheroName);
+    Superhero getSuperheroId(int superhero);
+
     List<CountPowerDTO> getSuperpowerCount();
     SuperPowerDTO getSuperPower(String SuperheroName);
     List<CityDTO> getCity();
@@ -18,5 +20,5 @@ public interface IRepository {
     List<String> getCities();
     List<String> getPowers();
     void addSuperHero(SuperheroFormDTO superheroFormDTO);
-
+    void updateSuperhero(SuperheroFormDTO superheroFormDTO);
 }

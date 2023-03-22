@@ -56,18 +56,20 @@ public class SuperheroController {
         return "redirect:/kea/superhero";
     }
 
-    /*@GetMapping("superhero/update/{id}")
+    @GetMapping("superhero/update/{id}")
     public String showUpdateProduct(@PathVariable("id") int updateId, Model model){
-        model.addAttribute("superhero", repository.(updateId));
+        model.addAttribute("updatedSuperhero", repository.getSuperheroId(updateId));
+        model.addAttribute("cities", repository.getCities());
+        model.addAttribute("powers", repository.getPowers());
         return "update";
     }
 
-    @PostMapping("superhero/update")
-    public String updateProduct(@ModelAttribute Product product){
-        productRepository.updateProduct(product);
-        return "redirect:/";	// PGR pattern
+   @PostMapping("superhero/update")
+    public String updateProduct(@ModelAttribute("updatedSuperhero") SuperheroFormDTO superheroFormDTO){
+        repository.updateSuperhero(superheroFormDTO);
+        return "redirect:/kea/superhero";	// PGR pattern
     }
-*/
+
 
 
 

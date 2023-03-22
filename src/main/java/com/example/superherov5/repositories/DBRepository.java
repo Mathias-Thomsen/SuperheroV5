@@ -8,11 +8,8 @@ import com.example.superherov5.model.Superhero;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository("dbRepository")
 public class DBRepository implements IRepository {
@@ -67,7 +64,12 @@ public class DBRepository implements IRepository {
         List<Superhero> superheroes = new ArrayList<Superhero>();
 
         try (Connection con = DBManager.getConnection()) {
-            String SQL = "SELECT superhero_id, superhero_name, reel_name, creation_date FROM superhero;";
+            String SQL = "SELECT superhero.superhero_id, superhero.superhero_name, superhero.reel_name, superhero.creation_date, City.city_name\n" +
+                    "FROM superhero\n" +
+                    "JOIN City\n" +
+                    "ON superhero.City_ID = City.city_ID\n" +
+                    "GROUP BY superhero.superhero_id, superhero.superhero_name, superhero.reel_name, superhero.creation_date, City.city_name\n" +
+                    "ORDER BY superhero.superhero_id ASC;";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
 
@@ -75,8 +77,9 @@ public class DBRepository implements IRepository {
                 int ID = rs.getInt("superhero_id");
                 String superheroName = rs.getString("superhero_name");
                 String reelName = rs.getString("reel_name");
+                String city = rs.getString("city_name");
                 Date creationdate = rs.getDate("creation_date");
-                superheroes.add(new Superhero(ID, superheroName, reelName, creationdate));
+                superheroes.add(new Superhero(ID, superheroName, reelName, city, creationdate));
             }
             return superheroes;
 
@@ -94,8 +97,9 @@ public class DBRepository implements IRepository {
         Superhero superhero1 = null;
 
         try (Connection con = DBManager.getConnection()) {
-            String SQL = "SELECT superhero_id, superhero_name, reel_name, creation_date FROM superhero " +
-                    "WHERE superhero_name = ?;";
+            String SQL = "SELECT superhero.superhero_id, superhero.superhero_name, superhero.reel_name, superhero.creation_date, city.city_name FROM superhero " +
+                    "JOIN City ON superhero.City_ID = City.city_ID" +
+                    "WHERE superhero_id = ?;";
             PreparedStatement pstmt = con.prepareStatement(SQL);
             pstmt.setString(1, superhero);
             ResultSet rs = pstmt.executeQuery();
@@ -103,8 +107,9 @@ public class DBRepository implements IRepository {
                 int ID = rs.getInt("superhero_id");
                 String superheroName = rs.getString("superhero_name");
                 String reelName = rs.getString("reel_name");
+                String city = rs.getString("city_name");
                 Date creationdate = rs.getDate("creation_date");
-                superhero1 = (new Superhero(ID, superheroName, reelName, creationdate));
+                superhero1 = (new Superhero(ID, superheroName, reelName, city, creationdate));
             }
 
         } catch (SQLException e) {
@@ -113,6 +118,37 @@ public class DBRepository implements IRepository {
         return superhero1;
 
     }
+
+    @Override
+    public Superhero getSuperheroId(int superhero) {
+        Superhero superhero1 = null;
+
+        try (Connection con = DBManager.getConnection()) {
+            String SQL = "SELECT superhero.superhero_id, superhero.superhero_name, superhero.reel_name, superhero.creation_date, city.city_name FROM superhero " +
+                    "JOIN City ON superhero.City_ID = City.city_ID WHERE superhero_id = ?;";
+            PreparedStatement pstmt = con.prepareStatement(SQL);
+            pstmt.setInt(1, superhero);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int ID = rs.getInt("superhero_id");
+                String superheroName = rs.getString("superhero_name");
+                String reelName = rs.getString("reel_name");
+                String city = rs.getString("city_name");
+                Date creationdate = rs.getDate("creation_date");
+                superhero1 = (new Superhero(ID, superheroName, reelName, city, creationdate));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return superhero1;
+
+    }
+
+
+
+
+
     @Override
     public List<CountPowerDTO> getSuperpowerCount() {
         List<CountPowerDTO> superpowerCount = new ArrayList<CountPowerDTO>();
@@ -225,7 +261,6 @@ public class DBRepository implements IRepository {
 
             String SQL2 = "insert into superhero (SUPERHERO_NAME, REEL_NAME, CREATION_DATE, CITY_ID) values(?, ?, ?, ?);";
 
-            //java.sql.Date sqlDate = new java.sql.Date(form.getCreationDate());
 
             pstmt = con.prepareStatement(SQL2, Statement.RETURN_GENERATED_KEYS); // return autoincremented key
             pstmt.setString(1, form.getHeroName());
@@ -267,6 +302,37 @@ public class DBRepository implements IRepository {
 
         }
 
+    }
+
+    @Override
+    public void updateSuperhero(SuperheroFormDTO superheroFormDTO) {
+        try{
+            Connection conn = DBManager.getConnection();
+
+            int cityId = 0;
+
+            String SQL1 = "select city_id from city where city_name = ?;";
+
+            PreparedStatement pstmt = conn.prepareStatement(SQL1);
+            pstmt.setString(1, superheroFormDTO.getCity());
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                cityId = rs.getInt("city_id");
+            }
+
+            String SQL2 = "UPDATE superhero SET superhero_name = ?, reel_name = ?, creation_date = ?, city_id = ? WHERE superhero_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(SQL2)) {
+                stmt.setString(1, superheroFormDTO.getHeroName());
+                stmt.setString(2, superheroFormDTO.getRealName());
+                stmt.setDate(3, Date.valueOf(superheroFormDTO.getCreationDate()));
+                stmt.setInt(4, cityId);
+                stmt.setInt(5, superheroFormDTO.getHeroId());
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
