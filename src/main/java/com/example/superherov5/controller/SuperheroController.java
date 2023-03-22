@@ -56,6 +56,19 @@ public class SuperheroController {
         return "redirect:/kea/superhero";
     }
 
+    /*@GetMapping("superhero/update/{id}")
+    public String showUpdateProduct(@PathVariable("id") int updateId, Model model){
+        model.addAttribute("superhero", repository.(updateId));
+        return "update";
+    }
+
+    @PostMapping("superhero/update")
+    public String updateProduct(@ModelAttribute Product product){
+        productRepository.updateProduct(product);
+        return "redirect:/";	// PGR pattern
+    }
+*/
+
 
 
 
