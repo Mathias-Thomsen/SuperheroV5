@@ -225,10 +225,12 @@ public class DBRepository implements IRepository {
 
             String SQL2 = "insert into superhero (SUPERHERO_NAME, REEL_NAME, CREATION_DATE, CITY_ID) values(?, ?, ?, ?);";
 
+            //java.sql.Date sqlDate = new java.sql.Date(form.getCreationDate());
+
             pstmt = con.prepareStatement(SQL2, Statement.RETURN_GENERATED_KEYS); // return autoincremented key
             pstmt.setString(1, form.getHeroName());
             pstmt.setString(2, form.getRealName());
-            pstmt.setDate(3, form.getCreationDate());
+            pstmt.setDate(3, Date.valueOf(form.getCreationDate()));
             pstmt.setInt(4, cityId);
 
             pstmt.executeUpdate();

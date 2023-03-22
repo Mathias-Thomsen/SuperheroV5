@@ -2,6 +2,7 @@ package com.example.superherov5.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -10,11 +11,11 @@ public class SuperheroFormDTO {
     private String heroName;
     private String realName;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private java.sql.Date creationDate;
+    private LocalDate creationDate;
     private String city;
     List<String> powerList;
 
-    public SuperheroFormDTO(int heroId, String heroName, String realName, java.sql.Date creationDate, String city, List<String> powerList) {
+    public SuperheroFormDTO(int heroId, String heroName, String realName, LocalDate creationDate, String city, List<String> powerList) {
         this.heroId = heroId;
         this.heroName = heroName;
         this.realName = realName;
@@ -53,16 +54,18 @@ public class SuperheroFormDTO {
         return realName;
     }
 
+
+
     public void setRealName(String realName) {
         this.realName = realName;
     }
 
-    public java.sql.Date getCreationDate() {
-        return (java.sql.Date) creationDate;
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
-    public void setCreationYear(java.sql.Date creationYear) {
-        this.creationDate = creationYear;
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getCity() {
